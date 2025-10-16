@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>보어 모델 원자 시뮬레이션 — 고리별 동일 속도 + 정지 기능</title>
+    <link rel="stylesheet" href="/css/atom.css">
+</head>
+<body>
+
+<div id="controls">
+    <form action="/make" method="post">
+      빨간 구: <input type="number" id="redCount" value="25" min="0" name="redCount">
+      하얀 구: <input type="number" id="whiteCount" value="25" min="0" name="whiteCount">
+      전자 수: <input type="number" id="electronCount" value="12" min="0" max="118" name="electronCount">
+      <button id="createBtn" type="submit">만들기</button>
+      <button id="toggleBtn">정지</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
+
+<script src="/js/atom.js"> </script>
+
+</body>
+</html>
