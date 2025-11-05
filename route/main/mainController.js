@@ -1,7 +1,8 @@
 exports.mainGetMid = (req,res) => {
-    if (req.session.user !== undefined) {
+    if (req.session.is_logined === true) {
         res.redirect('/logined/main');
-        return;
     }
-    res.render('main/logout_main')
+    else{
+        res.render('main/logout_main')
+    }
 }

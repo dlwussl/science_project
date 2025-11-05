@@ -22,7 +22,7 @@ nunjucks.configure('views', {
     express: app
 }).addFilter('nl2br', str => {
     if (!str) return '';
-    return str.replace(/\n/g, '<br>');
+    return str.replace(/\n/g, '<br>');x
 });
 
 app.listen(8000, (req,res) => {

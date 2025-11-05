@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나만의 원소 만들기 - My Own Element</title>
+  <style>
+    /* Reset and Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+      background: linear-gradient(135deg, #e0f2fe 0%, #ddd6fe 50%, #fae8ff 100%);
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header Styles */
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      padding: 1rem 0;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .atom-icon {
+      width: 32px;
+      height: 32px;
+      color: #3b82f6;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .btn-logout {
+      padding: 0.5rem 1.25rem;
+      background: white;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: #475569;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+
+    .content-wrapper {
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .welcome-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    .welcome-subtitle {
+      font-size: 1.125rem;
+      color: #64748b;
+      font-weight: 400;
+    }
+
+    /* Action Cards Grid */
+    .action-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (min-width: 768px) {
+      .action-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .action-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 2px solid transparent;
+      text-align: center;
+    }
+
+    .action-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-card.quiz {
+      border-color: #3b82f6;
+    }
+
+    .action-card.quiz:hover {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    }
+
+    .action-card.create {
+      border-color: #8b5cf6;
+    }
+
+    .action-card.create:hover {
+      background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+    }
+
+    .card-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 2rem;
+    }
+
+    .quiz .card-icon {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+    }
+
+    .create .card-icon {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-description {
+      font-size: 1rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    /* Stats Section */
+    .stats-section {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .stats-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .stats-number {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stats-label {
+      font-size: 1rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+
+    /* Footer */
+    .footer {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(226, 232, 240, 0.8);
+      padding: 1.5rem 0;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    /* Added modal/popup styles for element information display */
+    /* Modal Overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    /* Modal Content */
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Modal Header */
+    .modal-header {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      padding: 2rem;
+      border-radius: 20px 20px 0 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .element-symbol {
+      font-size: 4rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .element-names {
+      font-size: 1.25rem;
+      font-weight: 500;
+      opacity: 0.95;
+    }
+
+    /* Modal Body */
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .element-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-item {
+      background: #f8fafc;
+      padding: 1.25rem;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .info-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .element-description {
+      background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid #e0e7ff;
+    }
+
+    .description-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .description-text {
+      font-size: 1rem;
+      color: #475569;
+      line-height: 1.6;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .welcome-title {
+        font-size: 2rem;
+      }
+
+      .welcome-subtitle {
+        font-size: 1rem;
+      }
+
+      .action-card {
+        padding: 1.5rem;
+      }
+
+      .card-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 1.75rem;
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+      }
+
+      .stats-number {
+        font-size: 2.5rem;
+      }
+
+      .element-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .element-symbol {
+        font-size: 3rem;
+      }
+
+      .modal-body {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <svg class="atom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="1" fill="currentColor"/>
+          <ellipse cx="12" cy="12" rx="10" ry="4"/>
+          <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/>
+          <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>
+        </svg>
+        <h1 class="logo-text">나만의 원소 만들기</h1>
+      </div>
+      <button class="btn-logout" onclick="window.location.href='login.html'">로그아웃</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <h2 class="welcome-title">원소의 세계에 오신 것을 환영합니다</h2>
+        <p class="welcome-subtitle">퀴즈를 풀거나 나만의 원소를 만들어보세요</p>
+      </div>
+
+      <!-- Action Cards -->
+      <div class="action-cards">
+        <div class="action-card quiz">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+          </div>
+          <h3 class="card-title">퀴즈 시작하기</h3>
+          <p class="card-description">원소에 대한 지식을 테스트하고 새로운 것을 배워보세요</p>
+        </div>
+
+        <!-- Added onclick to open element popup -->
+        <div class="action-card create" onclick="openElementModal()">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40">
+              <circle cx="12" cy="12" r="1" fill="currentColor"/>
+              <ellipse cx="12" cy="12" rx="10" ry="4"/>
+              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/>
+              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>
+            </svg>
+          </div>
+          <h3 class="card-title">원소 만들기</h3>
+          <p class="card-description">상상력을 발휘하여 나만의 독특한 원소를 디자인하세요</p>
+        </div>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="stats-section">
+        <div class="stats-title">알려진 원소</div>
+        <div class="stats-number">118</div>
+        <div class="stats-label">주기율표의 원소들</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p class="footer-text">© 2025 Science Project Team</p>
+    </div>
+  </footer>
+
+  <!-- Added element information modal popup -->
+  <!-- Element Modal -->
+  <div class="modal-overlay" id="elementModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeElementModal()">×</button>
+        <div class="element-symbol">Au</div>
+        <div class="element-names">Gold / 금</div>
+      </div>
+      <div class="modal-body">
+        <div class="element-info-grid">
+          <div class="info-item">
+            <div class="info-label">양성자</div>
+            <div class="info-value">79</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">중성자</div>
+            <div class="info-value">118</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">전자</div>
+            <div class="info-value">79</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">기호</div>
+            <div class="info-value">Au</div>
+          </div>
+        </div>
+        <div class="element-description">
+          <div class="description-label">설명</div>
+          <div class="description-text">
+            금(Gold)은 화학 기호 Au를 가진 귀금속입니다. 
+            뛰어난 전도성과 부식에 대한 저항성으로 인해 전자 제품, 보석, 
+            그리고 다양한 산업 분야에서 사용됩니다. 
+            금은 인류 역사상 가장 오래된 귀금속 중 하나로, 
+            그 아름다움과 희소성으로 인해 높은 가치를 지니고 있습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Added JavaScript functions to control modal -->
+  <script>
+    function openElementModal() {
+      document.getElementById('elementModal').classList.add('active');
+    }
+
+    function closeElementModal() {
+      document.getElementById('elementModal').classList.remove('active');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('elementModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeElementModal();
+      }
+    });
+  </script>
+</body>
+</html>

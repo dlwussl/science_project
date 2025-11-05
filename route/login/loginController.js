@@ -35,6 +35,6 @@ exports.loginedMainGetMid = (req,res) => {
     if (!is_logined) {
         res.redirect('/')
     } else{
-        res.render('main/910test.html')
+        res.render('main/main.html')
     }
 }
