@@ -1,80 +1,81 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>나만의 원소 만들기 - My Own Element</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 원소 만들기 - My Own Element</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
+<!-- Header -->
+<header class="header">
     <div class="header-content">
-      <div class="logo-section">
-        <svg class="atom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="1" fill="currentColor"/>
-          <ellipse cx="12" cy="12" rx="10" ry="4"/>
-          <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/>
-          <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>
-        </svg>
-        <h1 class="logo-text">나만의 원소 만들기</h1>
-      </div>
-        <form action="/logout" method="post">
+        <div class="logo-section">
+            <svg class="atom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                <ellipse cx="12" cy="12" rx="10" ry="4"/>
+                <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/>
+                <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>
+            </svg>
+            <h1 class="logo-text">나만의 원소 만들기</h1>
+        </div>
+        <form action="/logout" method="get">
             <button class="btn-logout" type="submit">로그아웃</button>
         </form>
-    </div>
-  </header>
 
-  <!-- Main Content -->
-  <main class="main-content">
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="main-content">
     <div class="content-wrapper">
-      <!-- Welcome Section -->
-      <div class="welcome-section">
-        <h2 class="welcome-title">원소의 세계에 오신 것을 환영합니다</h2>
-        <p class="welcome-subtitle">퀴즈를 풀거나 나만의 원소를 만들어보세요</p>
-      </div>
-
-      <!-- Action Cards -->
-      <div class="action-cards">
-        <div class="action-card quiz">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40">
-              <path d="M9 11l3 3L22 4"/>
-              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-            </svg>
-          </div>
-          <h3 class="card-title">퀴즈 시작하기</h3>
-          <p class="card-description">원소에 대한 지식을 테스트하고 새로운 것을 배워보세요</p>
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h2 class="welcome-title">원소의 세계에 오신 것을 환영합니다</h2>
+            <p class="welcome-subtitle">퀴즈를 풀거나 나만의 원소를 만들어보세요</p>
         </div>
 
-        <div class="action-card create">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40">
-              <circle cx="12" cy="12" r="1" fill="currentColor"/>
-              <ellipse cx="12" cy="12" rx="10" ry="4"/>
-              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/>
-              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>
-            </svg>
-          </div>
-          <h3 class="card-title">원소 만들기</h3>
-          <p class="card-description">상상력을 발휘하여 나만의 독특한 원소를 디자인하세요</p>
-        </div>
-      </div>
+        <!-- Action Cards -->
+        <div class="action-cards">
+            <div class="action-card quiz">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40">
+                        <path d="M9 11l3 3L22 4"/>
+                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">퀴즈 시작하기</h3>
+                <p class="card-description">원소에 대한 지식을 테스트하고 새로운 것을 배워보세요</p>
+            </div>
 
-      <!-- Stats Section -->
-      <div class="stats-section">
-        <div class="stats-title">알려진 원소</div>
-        <div class="stats-number">118</div>
-        <div class="stats-label">주기율표의 원소들</div>
-      </div>
+            <div class="action-card create" onclick="location.href='/atom'">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40">
+                        <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                        <ellipse cx="12" cy="12" rx="10" ry="4"/>
+                        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/>
+                        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">원소 만들기</h3>
+                <p class="card-description">상상력을 발휘하여 나만의 독특한 원소를 디자인하세요</p>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stats-title">알려진 원소</div>
+            <div class="stats-number">118</div>
+            <div class="stats-label">주기율표의 원소들</div>
+        </div>
     </div>
-  </main>
+</main>
 
-  <!-- Footer -->
-  <footer class="footer">
+<!-- Footer -->
+<footer class="footer">
     <div class="footer-content">
-      <p class="footer-text">© 2025 Science Project Team</p>
+        <p class="footer-text">© 2025 Science Project Team</p>
     </div>
-  </footer>
+</footer>
 </body>
 </html>
