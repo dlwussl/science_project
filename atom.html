@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보어 모델 원자 시뮬레이션 — 고리별 동일 속도 + 정지 기능</title>
+    <link rel="stylesheet" href="/css/atom.css">
+</head>
+<body>
+
+<!-- 테두리 HTML 추가 -->
+<div class="atom-border-decoration">
+    <div class="corner-decoration top-left"></div>
+    <div class="corner-decoration top-right"></div>
+    <div class="corner-decoration bottom-left"></div>
+    <div class="corner-decoration bottom-right"></div>
+</div>
+
+<div id="controls">
+    <form action="/make" method="post" id="atomForm">
+        <div class="control-group">
+            <label for="redCount">빨간 구:</label>
+            <input type="number" id="redCount" value="25" min="0" name="redCount">
+        </div>
+        <div class="control-group">
+            <label for="whiteCount">하얀 구:</label>
+            <input type="number" id="whiteCount" value="25" min="0" name="whiteCount">
+        </div>
+        <div class="control-group">
+            <label for="electronCount">전자 수:</label>
+            <input type="number" id="electronCount" value="12" min="0" max="118" name="electronCount">
+        </div>
+        <button id="createBtn" type="submit" class="btn-primary">만들기</button>
+        <button id="toggleBtn" type="button" class="btn-secondary">정지</button>
+    </form>
+</div>
+
+
+<div class="modal-overlay" id="elementModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="modal-close" onclick="closeElementModal()">×</button>
+            <div class="element-symbol" id="modal-symbol">Au</div>
+            <div class="element-names" id="modal-names">Gold / 금</div>
+        </div>
+        <div class="modal-body">
+            <div class="element-info-grid">
+                <div class="info-item">
+                    <div class="info-label">양성자</div>
+                    <div class="info-value" id="modal-protons">79</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">중성자</div>
+                    <div class="info-value" id="modal-neutrons">118</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">전자</div>
+                    <div class="info-value" id="modal-electrons">79</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">기호</div>
+                    <div class="info-value" id="modal-symbol-info">Au</div>
+                </div>
+            </div>
+            <div class="element-description">
+                <div class="description-label">설명</div>
+                <div class="description-text" id="modal-description">
+                    금(Gold)은 화학 기호 Au를 가진 귀금속입니다.
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openElementModal() {
+        document.getElementById('elementModal').classList.add('active');
+    }
+
+    function closeElementModal() {
+        document.getElementById('elementModal').classList.remove('active');
+    }
+
+    document.getElementById('elementModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeElementModal();
+        }
+    });
+</script>
+
+<script>
+    /**
+     * 서버에서 받은 데이터로 모달 내용을 업데이트하고 모달을 엽니다.
+     * (DB의 description 테이블에 symbol, name_en, name_ko, description 컬럼이 있다고 가정)
+     */
+    function updateAndShowModal(data) {
+        const { element, counts } = data;
+
+        // DB에서 가져온 원소 정보로 업데이트
+        document.getElementById('modal-symbol').textContent = element.symbol || '??';
+        document.getElementById('modal-names').textContent = `${element.name_en || 'Unknown'} / ${element.name_ko || '알 수 없음'}`;
+        document.getElementById('modal-symbol-info').textContent = element.symbol || '??';
+        document.getElementById('modal-description').textContent = element.description || '설명이 없습니다.';
+
+        // 사용자가 입력한 값으로 양성자/중성자/전자 수 업데이트
+        document.getElementById('modal-protons').textContent = counts.red;
+        document.getElementById('modal-neutrons').textContent = counts.white;
+        document.getElementById('modal-electrons').textContent = counts.electron;
+
+        // 모달 열기
+        openElementModal();
+    }
+
+    // 폼 전송(submit) 이벤트 리스너 추가
+    document.getElementById('atomForm').addEventListener('submit', async function(event) {
+        // 1. 기본 폼 전송(페이지 새로고침) 방지
+        event.preventDefault();
+
+        // 2. 폼 데이터 가져오기
+        const formData = new FormData(this);
+        const data = {
+            redCount: formData.get('redCount'),
+            whiteCount: formData.get('whiteCount'),
+            electronCount: formData.get('electronCount')
+        };
+
+        // 3. fetch를 사용해 서버에 POST 요청 (JSON 형식으로)
+        try {
+            const response = await fetch('/make', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // bodyParser.json()이 인식하도록 설정
+                },
+                body: JSON.stringify(data) // JavaScript 객체를 JSON 문자열로 변환
+            });
+
+            // 서버 응답을 JSON으로 파싱
+            const result = await response.json();
+
+            if (!response.ok) {
+                // 404 (Not Found), 500 (Server Error) 등
+                alert(`오류: ${result.message || '서버 오류가 발생했습니다.'}`);
+                return;
+            }
+
+            // 4. 서버 응답이 성공적이면(result.success === true)
+            if (result.success) {
+                // 5. 모달 내용을 업데이트하고 보여주기
+                updateAndShowModal(result);
+            } else {
+                // 401 (Unauthorized) 등 로직상 오류
+                alert(`알림: ${result.message || '알 수 없는 오류.'}`);
+            }
+
+        } catch (error) {
+            // 네트워크 오류 등
+            console.error('Fetch error:', error);
+            alert('서버와 통신 중 오류가 발생했습니다.');
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
+<script src="/js/atom.js"> </script>
+
+</body>
+</html>
