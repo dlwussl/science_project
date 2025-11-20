@@ -37,7 +37,7 @@
 
         <!-- Action Cards -->
         <div class="action-cards">
-            <div class="action-card quiz">
+            <div class="action-card quiz" onclick="openQuizModal()">
                 <div class="card-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40">
                         <path d="M9 11l3 3L22 4"/>
@@ -70,6 +70,25 @@
         </div>
     </div>
 </main>
+<div class="modal-overlay" id="quizModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="modal-close" onclick="closeQuizModal()">×</button>
+            <div class="quiz-modal-title">원소 퀴즈</div>
+            <div class="quiz-modal-subtitle">지식을 테스트하고 순위를 확인하세요</div>
+        </div>
+        <div class="quiz-buttons">
+            <button class="quiz-btn" onclick="alert('문제 풀기 페이지로 이동합니다')">
+                <span class="quiz-btn-icon">📝</span>
+                문제 풀러가기
+            </button>
+            <button class="quiz-btn secondary" onclick="alert('랭킹 페이지로 이동합니다')">
+                <span class="quiz-btn-icon">🏆</span>
+                랭킹 보기
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- Footer -->
 <footer class="footer">
@@ -77,5 +96,18 @@
         <p class="footer-text">© 2025 Science Project Team</p>
     </div>
 </footer>
+<script>
+    function openQuizModal() {
+        document.getElementById('quizModal').classList.add('active');
+    }
+    function closeQuizModal() {
+        document.getElementById('quizModal').classList.remove('active');
+    }
+    document.getElementById('quizModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeQuizModal();
+        }
+    });
+</script>
 </body>
 </html>

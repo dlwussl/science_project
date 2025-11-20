@@ -152,6 +152,27 @@ window.addEventListener("resize",()=>{
     renderer.setSize(window.innerWidth,window.innerHeight);
 });
 
+
+/* ------------------------------------------- */
+/* 기존 모달 제어 함수 (수정 없음)                */
+/* ------------------------------------------- */
+function openElementModal() {
+    document.getElementById('elementModal').classList.add('active');
+}
+
+function closeElementModal() {
+    document.getElementById('elementModal').classList.remove('active');
+}
+
+document.getElementById('elementModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeElementModal();
+    }
+});
+
+/* ------------------------------------------- */
+/* 1. 성공 시 모달을 채우는 함수 (수정 없음)      */
+/* ------------------------------------------- */
 function updateAndShowModal(data) {
     const { element, counts } = data;
 
@@ -170,7 +191,35 @@ function updateAndShowModal(data) {
     openElementModal();
 }
 
-// 폼 전송(submit) 이벤트 리스너 추가
+/* ------------------------------------------- */
+/* 2. (신규 추가) 실패 시 모달을 채우는 함수     */
+/* ------------------------------------------- */
+/**
+ * 모달에 '없음' 또는 '오류' 메시지를 표시하고 엽니다.
+ * @param {string} message - 모달 설명란에 표시할 메시지
+ */
+function showErrorInModal(message) {
+    // 헤더 변경
+    document.getElementById('modal-symbol').textContent = 'X';
+    document.getElementById('modal-names').textContent = '알림 / Notice';
+
+    // 정보 그리드 초기화 (입력값이라도 보여주려면 이 부분을 주석처리)
+    document.getElementById('modal-protons').textContent = '-';
+    document.getElementById('modal-neutrons').textContent = '-';
+    document.getElementById('modal-electrons').textContent = '-';
+    document.getElementById('modal-symbol-info').textContent = '-';
+
+    // 설명란에 서버에서 받은 에러 메시지 표시
+    document.getElementById('modal-description').textContent = message;
+
+    // 모달 열기
+    openElementModal();
+}
+
+
+/* ------------------------------------------- */
+/* 3. 폼 전송(fetch) 로직 (수정됨)            */
+/* ------------------------------------------- */
 document.getElementById('atomForm').addEventListener('submit', async function(event) {
     // 1. 기본 폼 전송(페이지 새로고침) 방지
     event.preventDefault();
@@ -183,37 +232,39 @@ document.getElementById('atomForm').addEventListener('submit', async function(ev
         electronCount: formData.get('electronCount')
     };
 
-    // 3. fetch를 사용해 서버에 POST 요청 (JSON 형식으로)
+    // 3. fetch를 사용해 서버에 POST 요청
     try {
         const response = await fetch('/make', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json' // bodyParser.json()이 인식하도록 설정
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data) // JavaScript 객체를 JSON 문자열로 변환
+            body: JSON.stringify(data)
         });
 
-        // 서버 응답을 JSON으로 파싱
         const result = await response.json();
 
+        // 4. (수정) response.ok가 false일 때 (서버 오류 404, 500 등)
         if (!response.ok) {
-            // 404 (Not Found), 500 (Server Error) 등
-            alert(`오류: ${result.message || '서버 오류가 발생했습니다.'}`);
+            // alert(`오류: ${result.message || '서버 오류가 발생했습니다.'}`); // (기존)
+            showErrorInModal(result.message || '서버 오류가 발생했습니다.'); // (변경)
             return;
         }
 
-        // 4. 서버 응답이 성공적이면(result.success === true)
+        // 5. (수정) 서버 로직상 실패 (success: false)
         if (result.success) {
-            // 5. 모달 내용을 업데이트하고 보여주기
+            // 5-1. 성공: 원소 정보로 모달 채우기
             updateAndShowModal(result);
         } else {
-            // 401 (Unauthorized) 등 로직상 오류
-            alert(`알림: ${result.message || '알 수 없는 오류.'}`);
+            // 5-2. 실패 (예: 없는 원소, 로그인 안됨 등)
+            // alert(`알림: ${result.message || '알 수 없는 오류.'}`); // (기존)
+            showErrorInModal(result.message || '알 수 없는 오류.'); // (변경)
         }
 
     } catch (error) {
-        // 네트워크 오류 등
+        // 6. (수정) 네트워크 오류 등
         console.error('Fetch error:', error);
-        alert('서버와 통신 중 오류가 발생했습니다.');
+        // alert('서버와 통신 중 오류가 발생했습니다.'); // (기존)
+        showErrorInModal('서버와 통신 중 오류가 발생했습니다.'); // (변경)
     }
 });
